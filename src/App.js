@@ -1,24 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import CountrySelector from './components/CountrySelector/index';
+import Highlight from './components/Highlight/index';
+import Summary from './components/Summary/index';
+import { useEffect, useState } from 'react';
+import {getCountries, getReportByCountry} from './apis/index.js';
 
 function App() {
+  const [countries, setContries] = useState([]);
+  const [selectedCountryId, setSelectedCountryId] = useState('');
+  const [report,setReport] = useState([]);
+  useEffect(()=>{
+    getCountries().then(res=>{
+      console.log(res);
+      setContries(res.data);
+    }
+      );
+
+  },[])
+  const handleOnChange =(e)=>{
+    setSelectedCountryId(e.target.value);
+  }
+  useEffect(()=>{
+    if(selectedCountryId){
+      const selectedCountry = countries.find((country)=>country.ISO2.toLowerCase()===selectedCountryId);
+      getReportByCountry(selectedCountry.Slug).then((res)=>{
+        res.data.pop();
+        setReport(res.data);
+      })
+    }
+    
+  },[countries,selectedCountryId]);
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <CountrySelector countries={countries} handleOnChange={handleOnChange} />
+      <Highlight report={report}/>
+      <Summary report={report}/>
+    </>
   );
 }
 
