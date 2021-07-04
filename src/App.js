@@ -12,9 +12,10 @@ function App() {
     getCountries().then(res=>{
       console.log(res);
       setContries(res.data);
+    setSelectedCountryId('vn');
+
     }
       );
-
   },[])
   const handleOnChange =(e)=>{
     setSelectedCountryId(e.target.value);
@@ -22,6 +23,7 @@ function App() {
   useEffect(()=>{
     if(selectedCountryId){
       const selectedCountry = countries.find((country)=>country.ISO2.toLowerCase()===selectedCountryId);
+      console.log(selectedCountryId);
       getReportByCountry(selectedCountry.Slug).then((res)=>{
         res.data.pop();
         setReport(res.data);
@@ -32,7 +34,7 @@ function App() {
   
   return (
     <>
-      <CountrySelector countries={countries} handleOnChange={handleOnChange} />
+      <CountrySelector countries={countries} handleOnChange={handleOnChange} value={selectedCountryId} />
       <Highlight report={report}/>
       <Summary report={report}/>
     </>
