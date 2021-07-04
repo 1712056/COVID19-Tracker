@@ -19,7 +19,7 @@ export default function CountrySelector({ value, handleOnChange, countries }) {
       >
         {countries.map((country) => {
           return (
-            <option value={country.ISO2.toLowerCase()}>
+            <option key={country.ISO2} value={country.ISO2.toLowerCase()}>
               {country.Country}
             </option>
           );
